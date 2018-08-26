@@ -10,7 +10,12 @@ public class gameOver extends JFrame
 		// Name of window through the super
 		super("Game Over");
 		
-		JLabel winningMessage = new JLabel(winningPlayer + " has won the game!",  SwingConstants.CENTER);
+		JLabel winningMessage;
+		
+		if (winningPlayer == "draw")
+		   winningMessage = new JLabel("Game is a draw!",  SwingConstants.CENTER);
+		else
+		   winningMessage = new JLabel(winningPlayer + " has won the game!",  SwingConstants.CENTER);
 		
 		add(winningMessage);
 		

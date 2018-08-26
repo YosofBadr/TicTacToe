@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.BorderLayout;
 import java.awt.Font;
 
 
@@ -31,6 +32,8 @@ public class TicTacToe extends JFrame
 	// 2D array which will contain the button objects
 	JButton buttons[][] = new JButton[3][3];
 	
+	JButton resetButton = new JButton("Reset");
+
 	// Main method is run first, calls the constructor of the game
 	public static void main(String[] args)
 	{
@@ -97,6 +100,12 @@ public class TicTacToe extends JFrame
 			return gameOver = true; 
 		} // if
 		
+		if (boardFull())
+		{
+			new gameOver("draw");
+			return gameOver = true;
+		} // if
+		
 		return gameOver = false; 
 	} // winAchievedd()
 	
@@ -132,6 +141,10 @@ public class TicTacToe extends JFrame
 				buttons[i][j].setRolloverEnabled(false);
 			} // for 
 		
+		resetButton.addActionListener(handler);
+
+		add(resetButton, BorderLayout.SOUTH);
+		
 		// Places panel onto the JFrame (window)
 		add(panel);
 	
@@ -141,6 +154,31 @@ public class TicTacToe extends JFrame
 		// Displays window
 		setVisible(true);
 	} // constructor TicTacToe()
+	
+	// Checks the value of every button
+	// If any of them are empty then board is not full and returns false
+	// Otherwise true
+	public boolean boardFull()
+	{
+		for (int i = 0; i < 3; i++)
+			for (int j = 0; j < 3; j++)
+				if (buttons[i][j].getText().equals(""))
+					return false;
+		
+		return true;		
+	} // boardFull method
+	
+	public void resetBoard()
+	{
+		for (int i = 0; i < 3; i++)
+			for (int j = 0; j < 3; j++)
+				buttons[i][j].setText("");
+		
+		gameOver = false;
+		
+		currentPlayer = "X";
+	} // resetBoard()
+	
 	
 	// eventHanlder class acts as a listener and takes care of button clicks
 	private class eventHandler implements ActionListener
@@ -152,12 +190,16 @@ public class TicTacToe extends JFrame
 			// Checks the source of the button click (which one of the 9 buttons)
 			JButton button = (JButton)e.getSource(); 
 			
+			if (button.getText() == "Reset")
+				resetBoard();
+			
+			
 			// Checks if button clicked is empty (can't override a button previously played on)
 			// If button is empty then it checks if game is still in play 
 			// If so then we change the text of the tile according to the current player
 			// Update currentPlayer
 			// Checks new board if a win has been reached 
-			if (button.getText() == "")
+			else if (button.getText() == "")
 			{
 				if (!gameOver)
 				{
@@ -166,8 +208,7 @@ public class TicTacToe extends JFrame
 						currentPlayer = currentPlayer == "X" ? "O" : "X";
 						
 						winAchieved();
-
-				} // if
+				} // if	
 			} // if	
 		} // actionPerformed
 	} // class eventHandler
